@@ -1,0 +1,51 @@
+Manufacturing Margin and Cost Calculator (Pitch Deck)
+========================================================
+author: Wei Hsien Yeh 
+date: March 27, 2016
+
+Overview
+========================================================
+
+This application helps manufacturers calculate the actual profit of production by considering losses due to unplanned downtimes, speed loss, and products with unacceptable quality.
+
+- The application can be found at 
+- Code for this app can be found at 
+
+Inputs
+========================================================
+
+- Labour Hourly Rate: Wage of operators
+- Hourly Indirect Burden: Cost of operation in each operating hour
+- Product Price to Customer: (for this inquiry)
+- Material Cost: (for this inquiry)
+- Direct Burden per Part: Cost in addition to material for each part
+- # of Operators Assigned: Operators worked on this inquiry
+- Theoretical Output CT (in sec): Frequency of production
+- Total Duration (in minutes): Duration of job for this inquiry
+- # of Product Produced: Pieces/Units produced for this inquiry
+- Planned Downtime (in minutes): e.g. lunch, break, meeting time
+- Unplanned Downtime (in minutes): Duration unplanned downtime
+- # of NG Outputs: Pieces/Units discarded due to poor quality 
+
+Outputs
+========================================================
+
+Waterfall Chart:  
+Reads from left to right -- first bar of the chart shows the revenue of the job as calculated by the number of pieces made and their unit cost.  Then, the cost of production and other losses are subtracted from Revnue to obtain Net Profit.
+
+Table:  
+In this table, negative values indicate money lost whereas positive values indicate money gained (e.g. for Difference from Expected Profit, negative value means that the actual profit is less than expected).  
+
+How Does it Work?
+========================================================
+
+This app takes your inputs, for example:    
+```{r, eval=FALSE}
+numericInput("price1", label = "Product Price to Customer", value = 3.48),
+```
+and calculate output based on cost-weighted OEE model.  Shown below are calculations for losses:
+```{r, eval=FALSE}
+downtime.loss = -1 * downtime*(prorate + indirect.min)
+performance.loss = -1 * (production.time - ideal.time)*(prorate + indirect.min)
+quality.loss = -1 * (material*NG + direct*NG + ((NG*ct)/60)*(prorate + indirect.min)) 
+```
